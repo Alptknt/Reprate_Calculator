@@ -35,11 +35,11 @@ jobs:
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: |
-          pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon Lumos_Logo_32x32.ico --clean `
-            --add-data "Lumos_Logo_32x32.png;." `
-            --add-data "Lumos_Logo_32x32.ico;." `
-            --add-data "Lumos_Laser_Logo_1024x236.png;." `
-            --add-data "Osc_Diagram.png;." `
+          pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon Lumos_Logo_32x32.ico --clean ^
+            --add-data "Lumos_Logo_32x32.png;." ^
+            --add-data "Lumos_Logo_32x32.ico;." ^
+            --add-data "Lumos_Laser_Logo_1024x236.png;." ^
+            --add-data "Osc_Diagram.png;." ^
             --add-data "Screenshot.png;."
         shell: cmd
 
@@ -63,7 +63,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           cd dist
-          zip -r Reprate_Calculator_macOS.zip Reprate_Calculator.app
+          zip -r Reprate_Calculator_macOS.zip Reprate_Calculator
         shell: bash
 
       - name: Release
