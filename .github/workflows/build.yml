@@ -35,7 +35,7 @@ jobs:
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: |
-          pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon Lumos_Logo_32x32.ico --clean ^
+          pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon Lumos_Logo_32x32.ico --clean --noupx^
             --add-data "Lumos_Logo_32x32.png;." ^
             --add-data "Lumos_Logo_32x32.ico;." ^
             --add-data "Lumos_Laser_Logo_1024x236.png;." ^
@@ -47,6 +47,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           pyinstaller main.py \
+            --noupx\
             --onefile \
             --windowed \
             --name Reprate_Calculator \
