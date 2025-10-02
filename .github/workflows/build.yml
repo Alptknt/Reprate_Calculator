@@ -71,6 +71,7 @@ jobs:
               --add-data "assets/Lumos_Laser_Logo_1024x236.png:assets" \
               --add-data "assets/Osc_Diagram.png:assets" \
               --add-data "assets/Screenshot.png:assets"
+          fi
         shell: bash
 
       # ----------------------------
