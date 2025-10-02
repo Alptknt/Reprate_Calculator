@@ -1,65 +1,83 @@
-name: Build Release
+name: Build Reprate_Calculator
 
 on:
-  workflow_dispatch:    # allows manual triggering
   push:
-    tags:
-      - 'v*'           # optional: trigger on version tags like v1.0.0
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
+    name: Build for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
-        python: [3.11]
+        os: [windows-latest, macos-latest]
+        python-version: [3.11]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # ----------------------------
+      # 1. Checkout repository
+      # ----------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python }}
+      # ----------------------------
+      # 2. Set up Python
+      # ----------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Upgrade pip and install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller pillow
+      # ----------------------------
+      # 3. Install dependencies
+      # ----------------------------
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller pillow
 
-    - name: Prepare assets
-      run: |
-        mkdir -p assets
-        cp Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png Osc_Diagram.png Screenshot.png assets/
-      shell: bash
+      # ----------------------------
+      # 4. Prepare assets folder
+      # ----------------------------
+      - name: Prepare assets
+        run: |
+          mkdir -p assets
+          cp Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png Osc_Diagram.png Screenshot.png assets/
 
-    - name: Build with PyInstaller
-      run: |
-        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          pyinstaller main.py \
-            --onefile \
-            --windowed \
-            --icon=Lumos_Logo_32x32.ico \
-            --add-data "assets/Lumos_Logo_32x32.png;assets" \
-            --add-data "assets/Lumos_Laser_Logo_1024x236.png;assets" \
-            --add-data "assets/Osc_Diagram.png;assets" \
-            --add-data "assets/Screenshot.png;assets"
-        else
-          pyinstaller main.py \
-            --onefile \
-            --windowed \
-            --icon=Lumos_Logo_32x32.icns \
-            --add-data "assets/Lumos_Logo_32x32.png:assets" \
-            --add-data "assets/Lumos_Laser_Logo_1024x236.png:assets" \
-            --add-data "assets/Osc_Diagram.png:assets" \
-            --add-data "assets/Screenshot.png:assets"
-      shell: bash
+      # ----------------------------
+      # 5. Build executable
+      # ----------------------------
+      - name: Build with PyInstaller
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            pyinstaller main.py \
+              --onefile \
+              --windowed \
+              --icon=Lumos_Logo_32x32.ico \
+              --add-data "assets/Lumos_Logo_32x32.png;assets" \
+              --add-data "assets/Lumos_Laser_Logo_1024x236.png;assets" \
+              --add-data "assets/Osc_Diagram.png;assets" \
+              --add-data "assets/Screenshot.png;assets"
+          else
+            pyinstaller main.py \
+              --onefile \
+              --windowed \
+              --icon=Lumos_Logo_32x32.icns \
+              --add-data "assets/Lumos_Logo_32x32.png:assets" \
+              --add-data "assets/Lumos_Laser_Logo_1024x236.png:assets" \
+              --add-data "assets/Osc_Diagram.png:assets" \
+              --add-data "assets/Screenshot.png:assets"
+        shell: bash
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }}-build
-        path: |
-          dist/*.exe
-          dist/*.app
+      # ----------------------------
+      # 6. Upload artifacts
+      # ----------------------------
+      - name: Upload Executable
+        uses: actions/upload-artifact@v3
+        with:
+          name: Reprate_Calculator-${{ matrix.os }}
+          path: dist/
