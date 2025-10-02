@@ -30,15 +30,19 @@ jobs:
           pip install pyinstaller pillow
 
       - name: Build executable with PyInstaller
-        run: |
-          # Set data files string for PyInstaller
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            DATA_FILES="Lumos_Logo_32x32.png;Lumos_Logo_32x32.ico;Lumos_Laser_Logo_1024x236.png;Osc_Diagram.png;Screenshot.png"
-            pyinstaller --noconfirm --onefile --add-data "$DATA_FILES" main.py
-          else
-            DATA_FILES="Lumos_Logo_32x32.png:Lumos_Logo_32x32.ico:Lumos_Laser_Logo_1024x236.png:Osc_Diagram.png:Screenshot.png"
-            pyinstaller --noconfirm --onefile --windowed --add-data "$DATA_FILES" main.py
-          fi
+  run: |
+    if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+      DATA_FILES="Lumos_Logo_32x32.png;Lumos_Logo_32x32.ico;Lumos_Laser_Logo_1024x236.png;Osc_Diagram.png;Screenshot.png"
+      pyinstaller --noconfirm --onefile --add-data "$DATA_FILES" main.py
+    else
+      # macOS: add each file separately
+      pyinstaller --noconfirm --onefile --windowed \
+        --add-data "Lumos_Logo_32x32.png:." \
+        --add-data "Lumos_Logo_32x32.ico:." \
+        --add-data "Lumos_Laser_Logo_1024x236.png:." \
+        --add-data "Osc_Diagram.png:." \
+        --add-data "Screenshot.png:." \
+        main.py
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
