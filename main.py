@@ -14,13 +14,13 @@ from about import build_about_tab
 # ==============================
 # Helper: resource path for PyInstaller
 # ==============================
-def resource_path(relative_path):
-    """Get absolute path to resource (works for dev and for PyInstaller)"""
+def resource_path(filename: str) -> str:
+    """Get absolute path to resource (works in dev and PyInstaller bundle)."""
     try:
-        base_path = sys._MEIPASS  # when running from PyInstaller bundle
-    except AttributeError:
+        base_path = sys._MEIPASS   # PyInstaller extracts to this temp folder
+    except Exception:
         base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, filename)
 
 # ==============================
 # Tooltip class
@@ -65,17 +65,21 @@ root.title(conf.WINDOW_TITLE)
 root.geometry(conf.WINDOW_SIZE)
 root.resizable(*conf.WINDOW_RESIZABLE)
 
-# Set as window icon (cross-platform)
-if platform.system() == "Windows":
-    root.iconbitmap(resource_path("assets/Lumos_Logo_32x32.ico"))
-else:
-    try:
-        logo_icon = ImageTk.PhotoImage(Image.open(resource_path("assets/Lumos_Logo_32x32.png")))
-        root.iconphoto(True, logo_icon)
-    except Exception:
-        pass
+# ------------------------------
+# Window icon setup
+# ------------------------------
+try:
+    if platform.system() == "Windows":
+        root.iconbitmap(resource_path("Lumos_Logo_32x32.ico"))
+    else:  # macOS/Linux fallback
+        icon_img = tk.PhotoImage(file=resource_path("Lumos_Logo_32x32.png"))
+        root.iconphoto(True, icon_img)
+except Exception as e:
+    print(f"⚠️ Could not set window icon: {e}")
 
+# ------------------------------
 # Notebook
+# ------------------------------
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True)
 
@@ -98,7 +102,9 @@ def on_tab_changed(event):
 notebook.bind("<<NotebookTabChanged>>", on_tab_changed)
 notebook.select(0)
 
+# ------------------------------
 # Left and Right Frames
+# ------------------------------
 left_frame = tk.Frame(oscillator_frame, width=600, height=720)
 left_frame.pack(side="left", fill="both")
 left_frame.pack_propagate(False)
