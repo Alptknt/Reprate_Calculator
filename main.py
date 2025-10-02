@@ -2,6 +2,7 @@
 # # Developed by Alptekin Tanatar
 # # ==============================
 
+import sys
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -52,44 +53,45 @@ root.geometry(conf.WINDOW_SIZE)
 root.resizable(*conf.WINDOW_RESIZABLE)
 
 # Load your logo
-logo_img = Image.open("Lumos_Logo_32x32.png")  # your 32x32 logo
-logo_icon = ImageTk.PhotoImage(logo_img)
+#logo_img = Image.open("Lumos_Logo_32x32.png")  # your 32x32 logo
+#logo_icon = ImageTk.PhotoImage(logo_img)
 
 # Set as window icon
-root.iconphoto(False, logo_icon)
+#root.iconbitmap("Lumos_Logo_32x32.ico")
+
+# Set as window icon Crossplatform
+if sys.platform.startswith("win"):
+    root.iconbitmap("Lumos_Logo_32x32.ico")
+else:
+    logo_icon = ImageTk.PhotoImage(Image.open("Lumos_Logo_32x32.png"))
+    root.iconphoto(True, logo_icon)
 
 # Notebook
 notebook = ttk.Notebook(root)
 notebook.pack(fill="both", expand=True)
 
+# Frames
 oscillator_frame = tk.Frame(notebook, width=1280, height=720)
-
 about_frame = tk.Frame(notebook, width=1280, height=720)
-notebook.add(about_frame, text="About")
+
+# Prevent auto-resize
+oscillator_frame.pack_propagate(False)
 about_frame.pack_propagate(False)
 
-# Only build the About tab content when it's selected
+notebook.add(oscillator_frame, text="Oscillator Frequency")  # First tab
+notebook.add(about_frame, text="About")                      # Second tab
+
+# Build About tab content only when selected
 def on_tab_changed(event):
     selected = event.widget.index("current")
-    # Assuming 'About' tab is the second tab (index 1)
-    if selected == 1 and not hasattr(about_frame, 'built'):
+    if selected == 1 and not hasattr(about_frame, 'built'):  # Second tab index is 1
         build_about_tab(about_frame)
-        about_frame.built = True  # prevent rebuilding every time
+        about_frame.built = True
 
 notebook.bind("<<NotebookTabChanged>>", on_tab_changed)
 
-
-# Add tabs
-notebook.add(about_frame, text="About")
-notebook.add(oscillator_frame, text="Oscillator Frequency")
-oscillator_frame.pack_propagate(False)
-about_frame.pack_propagate(False)
-
 # Set default tab
-notebook.select(1)  # Open "Oscillator Frequency" by default
-
-oscillator_frame.pack_propagate(False)
-about_frame.pack_propagate(False)
+notebook.select(0)  # Open "Oscillator Frequency" by default
 
 # Left and Right Frames
 left_frame = tk.Frame(oscillator_frame, width=600, height=720)
