@@ -1,6 +1,6 @@
 name: Build and Release Reprate_Calculator
 
-# Explicitly grant permissions for release creation
+# Allow workflow to create releases
 permissions:
   contents: write
 
@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    name: Build for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -44,7 +45,7 @@ jobs:
           pip install pyinstaller pillow
 
       # ----------------------------
-      # 4. Prepare assets
+      # 4. Prepare assets folder
       # ----------------------------
       - name: Prepare assets (Windows)
         if: runner.os == 'Windows'
@@ -66,12 +67,7 @@ jobs:
       - name: Build with PyInstaller (Windows)
         if: runner.os == 'Windows'
         run: |
-          pyinstaller main.py `
-            --onefile `
-            --windowed `
-            --name Reprate_Calculator `
-            --icon=Lumos_Logo_32x32.ico `
-            --clean `
+          pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon=Lumos_Logo_32x32.ico --clean `
             --add-data "assets/Lumos_Logo_32x32.png;assets" `
             --add-data "assets/Lumos_Laser_Logo_1024x236.png;assets" `
             --add-data "assets/Osc_Diagram.png;assets" `
@@ -94,27 +90,24 @@ jobs:
         shell: bash
 
       # ----------------------------
-      # 6. Create GitHub release
+      # 6. Zip macOS app for release
       # ----------------------------
-      - name: Create GitHub Release
-        id: create_release
+      - name: Zip macOS executable
+        if: runner.os == 'macOS'
+        run: |
+          cd dist
+          zip -r Reprate_Calculator_macOS.zip Reprate_Calculator
+        shell: bash
+
+      # ----------------------------
+      # 7. Upload Release to GitHub
+      # ----------------------------
+      - name: Publish release with assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.0
+          files: |
+            dist/Reprate_Calculator.exe
+            dist/Reprate_Calculator_macOS.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ----------------------------
-      # 7. Upload release assets
-      # ----------------------------
-      - name: Upload Windows Release Asset
-        if: runner.os == 'Windows'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/Reprate_Calculator.exe
-
-      - name: Upload macOS Release Asset
-        if: runner.os == 'macOS'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/Reprate_Calculator
