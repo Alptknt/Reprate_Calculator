@@ -45,8 +45,16 @@ jobs:
       # ----------------------------
       - name: Prepare assets
         run: |
-          mkdir -p assets
-          cp Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png Osc_Diagram.png Screenshot.png assets/
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            # PowerShell commands
+            New-Item -ItemType Directory -Force -Path assets
+            Copy-Item Lumos_Logo_32x32.png, Lumos_Logo_32x32.ico, Lumos_Laser_Logo_1024x236.png, Osc_Diagram.png, Screenshot.png -Destination assets
+          else
+            # macOS/Linux
+            mkdir -p assets
+            cp Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png Osc_Diagram.png Screenshot.png assets/
+          fi
+        shell: bash
 
       # ----------------------------
       # 5. Build executable / app
