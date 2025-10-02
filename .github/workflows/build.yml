@@ -51,28 +51,26 @@ os.makedirs('assets', exist_ok=True)
 for f in ['Lumos_Logo_32x32.png','Lumos_Logo_32x32.ico','Lumos_Laser_Logo_1024x236.png','Osc_Diagram.png','Screenshot.png']:
     shutil.copy(f, 'assets')
 "
-      
+
       # ----------------------------
       # 5a. Build executable on Windows
       # ----------------------------
       - name: Build with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
+        shell: pwsh
         run: |
-          pyinstaller main.py `
-            --onefile `
-            --windowed `
-            --icon=assets\Lumos_Logo_32x32.ico `
+          pyinstaller main.py --onefile --windowed --icon=assets\Lumos_Logo_32x32.ico `
             --add-data "assets\Lumos_Logo_32x32.png;assets" `
             --add-data "assets\Lumos_Laser_Logo_1024x236.png;assets" `
             --add-data "assets\Osc_Diagram.png;assets" `
             --add-data "assets\Screenshot.png;assets"
-        shell: pwsh
 
       # ----------------------------
       # 5b. Build executable on macOS
       # ----------------------------
       - name: Build with PyInstaller (macOS)
         if: matrix.os == 'macos-latest'
+        shell: bash
         run: |
           pyinstaller main.py \
             --onefile \
@@ -82,17 +80,16 @@ for f in ['Lumos_Logo_32x32.png','Lumos_Logo_32x32.ico','Lumos_Laser_Logo_1024x2
             --add-data "assets/Lumos_Laser_Logo_1024x236.png:assets" \
             --add-data "assets/Osc_Diagram.png:assets" \
             --add-data "assets/Screenshot.png:assets"
-        shell: bash
 
       # ----------------------------
       # 6a. Zip macOS app (optional)
       # ----------------------------
       - name: Zip macOS app
         if: matrix.os == 'macos-latest'
+        shell: bash
         run: |
           cd dist
           zip -r Reprate_Calculator-macos.zip main
-        shell: bash
 
       # ----------------------------
       # 7. Upload artifact
@@ -101,7 +98,4 @@ for f in ['Lumos_Logo_32x32.png','Lumos_Logo_32x32.ico','Lumos_Laser_Logo_1024x2
         uses: actions/upload-artifact@v3
         with:
           name: Reprate_Calculator-${{ matrix.os }}
-          path: |
-            dist/*.exe
-            dist/*.zip
-            dist/main
+          pat
