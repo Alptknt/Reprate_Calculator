@@ -2,9 +2,7 @@
 # # Developed by Alptekin Tanatar
 # # ==============================
 
-
 #Constants & Defaults (all here)
-
 
 # --- Window settings ---
 WINDOW_TITLE = "Oscillator-Reprate Calculator v1.0"
