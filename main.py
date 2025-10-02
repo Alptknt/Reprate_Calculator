@@ -1,13 +1,26 @@
-# # ==============================
-# # Developed by Alptekin Tanatar
-# # ==============================
+# ==============================
+# Developed by Alptekin Tanatar
+# ==============================
 
 import sys
+import os
+import platform
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import config as conf
 from about import build_about_tab
+
+# ==============================
+# Helper: resource path for PyInstaller
+# ==============================
+def resource_path(relative_path):
+    """Get absolute path to resource (works for dev and for PyInstaller)"""
+    try:
+        base_path = sys._MEIPASS  # when running from PyInstaller bundle
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 # ==============================
 # Tooltip class
@@ -52,19 +65,15 @@ root.title(conf.WINDOW_TITLE)
 root.geometry(conf.WINDOW_SIZE)
 root.resizable(*conf.WINDOW_RESIZABLE)
 
-# Load your logo
-#logo_img = Image.open("Lumos_Logo_32x32.png")  # your 32x32 logo
-#logo_icon = ImageTk.PhotoImage(logo_img)
-
-# Set as window icon
-#root.iconbitmap("Lumos_Logo_32x32.ico")
-
-# Set as window icon Crossplatform
-if sys.platform.startswith("win"):
-    root.iconbitmap("Lumos_Logo_32x32.ico")
+# Set as window icon (cross-platform)
+if platform.system() == "Windows":
+    root.iconbitmap(resource_path("assets/Lumos_Logo_32x32.ico"))
 else:
-    logo_icon = ImageTk.PhotoImage(Image.open("Lumos_Logo_32x32.png"))
-    root.iconphoto(True, logo_icon)
+    try:
+        logo_icon = ImageTk.PhotoImage(Image.open(resource_path("assets/Lumos_Logo_32x32.png")))
+        root.iconphoto(True, logo_icon)
+    except Exception:
+        pass
 
 # Notebook
 notebook = ttk.Notebook(root)
@@ -74,24 +83,20 @@ notebook.pack(fill="both", expand=True)
 oscillator_frame = tk.Frame(notebook, width=1280, height=720)
 about_frame = tk.Frame(notebook, width=1280, height=720)
 
-# Prevent auto-resize
 oscillator_frame.pack_propagate(False)
 about_frame.pack_propagate(False)
 
-notebook.add(oscillator_frame, text="Oscillator Frequency")  # First tab
-notebook.add(about_frame, text="About")                      # Second tab
+notebook.add(oscillator_frame, text="Oscillator Frequency")
+notebook.add(about_frame, text="About")
 
-# Build About tab content only when selected
 def on_tab_changed(event):
     selected = event.widget.index("current")
-    if selected == 1 and not hasattr(about_frame, 'built'):  # Second tab index is 1
+    if selected == 1 and not hasattr(about_frame, 'built'):
         build_about_tab(about_frame)
         about_frame.built = True
 
 notebook.bind("<<NotebookTabChanged>>", on_tab_changed)
-
-# Set default tab
-notebook.select(0)  # Open "Oscillator Frequency" by default
+notebook.select(0)
 
 # Left and Right Frames
 left_frame = tk.Frame(oscillator_frame, width=600, height=720)
@@ -102,7 +107,6 @@ right_frame = tk.Frame(oscillator_frame, width=680, height=720)
 right_frame.pack(side="right", fill="both")
 right_frame.pack_propagate(False)
 
-# Vertical Divider
 divider = tk.Frame(oscillator_frame, width=2, bg="#A0A0A0")
 divider.place(x=conf.MID_DIV_X_POS, y=50, height=620)
 
@@ -111,7 +115,7 @@ c_fiber_val = tk.DoubleVar(value=conf.C_FIBER_DEFAULT)
 c_air_val   = tk.DoubleVar(value=conf.C_AIR_DEFAULT)
 
 # ==============================
-# Left Side: Fiber Section
+# Fiber Section
 # ==============================
 header_left = tk.Label(left_frame, text="Fiber Cavity Length", font=("Open Sans", 18,"bold"))
 header_left.place(relx=0.5, y=20, anchor="n")
@@ -241,7 +245,7 @@ h_divider_r.place(relx=0.5, y=130, anchor="n")
 
 # Image
 try:
-    img = Image.open(conf.OSC_IMAGE)
+    img = Image.open(resource_path(conf.OSC_IMAGE))
     img = img.resize(conf.OSC_IMAGE_SIZE, Image.Resampling.LANCZOS)
     osc_img = ImageTk.PhotoImage(img)
 
@@ -354,7 +358,7 @@ def update_times(*args):
     try:
         f0 = freq_mhz * 1e6
         for i, (fiber_out, freq_out) in enumerate(rep_rate_rows):
-            mult = 2 * (2**i)  # 2,4,8,16
+            mult = 2 * (2**i)
             f_new = f0 * mult
             period_s = 1 / f_new
             fiber_len_m = period_s * c_fiber
@@ -372,7 +376,7 @@ def update_times(*args):
     except Exception:
         pass
 
-# --- Bind all relevant input entries ---
+# Bind input updates
 for e in fiber_inputs + [fs_entry, c_fiber_entry, c_air_entry]:
     e.bind("<KeyRelease>", lambda event: update_times())
 

@@ -45,33 +45,16 @@ jobs:
           pip install pyinstaller pillow
 
       # ----------------------------
-      # 4. Prepare assets folder
-      # ----------------------------
-      - name: Prepare assets (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          New-Item -ItemType Directory -Force -Path assets
-          Copy-Item Lumos_Logo_32x32.png,Lumos_Logo_32x32.ico,Lumos_Laser_Logo_1024x236.png,Osc_Diagram.png,Screenshot.png -Destination assets
-        shell: pwsh
-
-      - name: Prepare assets (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          mkdir -p assets
-          cp Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png Osc_Diagram.png Screenshot.png assets/
-        shell: bash
-
-      # ----------------------------
-      # 5. Build executable/app
+      # 4. Build executable/app
       # ----------------------------
       - name: Build with PyInstaller (Windows)
         if: runner.os == 'Windows'
         run: |
           pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon=Lumos_Logo_32x32.ico --clean `
-            --add-data "assets/Lumos_Logo_32x32.png;assets" `
-            --add-data "assets/Lumos_Laser_Logo_1024x236.png;assets" `
-            --add-data "assets/Osc_Diagram.png;assets" `
-            --add-data "assets/Screenshot.png;assets"
+            --add-data "Lumos_Logo_32x32.png;assets" `
+            --add-data "Lumos_Laser_Logo_1024x236.png;assets" `
+            --add-data "Osc_Diagram.png;assets" `
+            --add-data "Screenshot.png;assets"
         shell: pwsh
 
       - name: Build with PyInstaller (macOS)
@@ -81,16 +64,16 @@ jobs:
             --onefile \
             --windowed \
             --name Reprate_Calculator \
-            --icon=Lumos_Logo_32x32.icns \
+            --icon Lumos_Logo_32x32.icns \
             --clean \
-            --add-data "assets/Lumos_Logo_32x32.png:assets" \
-            --add-data "assets/Lumos_Laser_Logo_1024x236.png:assets" \
-            --add-data "assets/Osc_Diagram.png:assets" \
-            --add-data "assets/Screenshot.png:assets"
+            --add-data "Lumos_Logo_32x32.png:assets" \
+            --add-data "Lumos_Laser_Logo_1024x236.png:assets" \
+            --add-data "Osc_Diagram.png:assets" \
+            --add-data "Screenshot.png:assets"
         shell: bash
 
       # ----------------------------
-      # 6. Zip macOS app for release
+      # 5. Zip macOS app for release
       # ----------------------------
       - name: Zip macOS executable
         if: runner.os == 'macOS'
@@ -100,7 +83,7 @@ jobs:
         shell: bash
 
       # ----------------------------
-      # 7. Upload Release to GitHub
+      # 6. Upload Release to GitHub
       # ----------------------------
       - name: Publish release with assets
         uses: softprops/action-gh-release@v2
