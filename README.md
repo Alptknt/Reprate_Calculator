@@ -15,7 +15,6 @@ It is built with Python and packaged into standalone executables for **Windows**
 
 - Cross-platform (Windows `.exe` and macOS `.app`)
 - Simple UI with preloaded diagrams
-- Bundled with project-specific logos and resources
 - Packaged as a single executable file (no Python required)
 
 ---
