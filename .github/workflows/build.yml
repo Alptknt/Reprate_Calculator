@@ -1,34 +1,61 @@
-name: Build Executables
+name: Build App
 
 on:
   push:
     tags:
-      - "v*"   # only build when you push a version tag like v1.0
-  workflow_dispatch:  # allows manual trigger
+      - 'v*'   # Only run on version tags like v1.0, v1.1, etc.
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  build-windows:
+    runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Windows EXE
+        run: |
+          pyinstaller --onefile --noconsole --add-data "Lumos_Laser_Logo_1024x236.png;." --add-data "Lumos_Logo_32x32.png;." --add-data "Osc_Diagram.png;." main.py
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows-Build
+          path: dist/*.exe
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
           pip install -r requirements.txt
           pip install pyinstaller
 
       - name: Build macOS App
         run: |
-          pyinstaller --onefile --windowed --icon=images/Lumos_Logo_32x32.icns main.py
+          pyinstaller --onefile --noconsole --add-data "Lumos_Laser_Logo_1024x236.png:." --add-data "Lumos_Logo_32x32.png:." --add-data "Osc_Diagram.png:." main.py
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: macOS-app
-          path: dist/
+          name: MacOS-Build
+          path: dist/*
