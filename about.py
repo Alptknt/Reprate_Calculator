@@ -1,10 +1,21 @@
-# # ==============================
-# # Developed by Alptekin Tanatar
-# # ==============================
+# ==============================
+# Developed by Alptekin Tanatar
+# ==============================
 
 import tkinter as tk
 from PIL import Image, ImageTk
 import webbrowser
+import sys
+import os
+
+# Helper function to find resources in PyInstaller bundle or dev
+def resource_path(filename: str) -> str:
+    """Get absolute path to resource, works in dev and PyInstaller bundle"""
+    try:
+        base_path = sys._MEIPASS  # PyInstaller temp folder
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, filename)
 
 def build_about_tab(parent_frame):
     # Header
@@ -13,10 +24,9 @@ def build_about_tab(parent_frame):
 
     # Description
     about_text = """This software calculates fiber and free-space cavity lengths for oscillator, 
-    computes cavity frequency, and provides fiber lenghts for reprate multiplier. Developed and maintained by Lumos Laser."""
+    computes cavity frequency, and provides fiber lengths for reprate multiplier. Developed and maintained by Lumos Laser."""
     about_label = tk.Label(parent_frame, text=about_text, font=("Open Sans", 12), justify="center")
     about_label.pack(pady=10)
-
 
     # GitHub link
     def open_github():
@@ -32,10 +42,9 @@ def build_about_tab(parent_frame):
     company_btn = tk.Button(parent_frame, text="Company Website", font=("Open Sans", 12, "underline"), fg="blue", bd=0, cursor="hand2", command=open_company)
     company_btn.pack(pady=5)
 
-
     # Company logo
     try:
-        logo_img = Image.open("Lumos_Laser_Logo_1024x236.png")  # logo path
+        logo_img = Image.open(resource_path("Lumos_Laser_Logo_1024x236.png"))  # use resource_path
         logo_img = logo_img.resize((512, 118), Image.Resampling.LANCZOS)
         logo_photo = ImageTk.PhotoImage(logo_img)
         logo_label = tk.Label(parent_frame, image=logo_photo)
@@ -44,4 +53,3 @@ def build_about_tab(parent_frame):
     except Exception as e:
         logo_error = tk.Label(parent_frame, text=f"Logo not found: {e}", fg="red", font=("Open Sans", 12))
         logo_error.pack(pady=10)
-
