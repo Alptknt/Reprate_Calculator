@@ -21,7 +21,7 @@ def build_about_tab(parent_frame):
 
     # GitHub link
     def open_github():
-        webbrowser.open("https://github.com/yourusername/yourrepo")
+        webbrowser.open("https://github.com/Alptknt/Reprate_Calculator")
 
     github_btn = tk.Button(parent_frame, text="GitHub Repository", font=("Open Sans", 12, "underline"), fg="blue", bd=0, cursor="hand2", command=open_github)
     github_btn.pack(pady=5)
