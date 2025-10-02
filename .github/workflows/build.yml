@@ -1,9 +1,11 @@
-name: Build Release
+name: Build Executables
 
 on:
   push:
     tags:
-      - 'v*'  # Trigger on version tags, e.g., v1.0.0
+      - 'v*'        # Trigger on version tags, e.g., v1.0.0
+  workflow_dispatch:  
+
 
 jobs:
   build:
