@@ -1,63 +1,78 @@
-name: Build and Release
+name: Build Reprate Calculator
 
 on:
   push:
     tags:
-      - "v1.0"   # e.g. v1.0.0
+      - 'v*'  # Trigger only on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual run
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest]
+  build-windows:
+    name: Build Windows Executable
+    runs-on: windows-2025
 
     steps:
-      - name: Checkout source
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pyinstaller
 
-      # Windows build
-      - name: Build Windows executable
-        if: matrix.os == 'windows-latest'
+      - name: Build EXE with PyInstaller
         run: |
           pyinstaller --onefile --windowed --icon=Lumos_Logo_32x32.ico main.py
 
-      # macOS build
-      - name: Build macOS app
-        if: matrix.os == 'macos-latest'
+      - name: Create release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reprate_Calculator_Windows
+          path: dist/main.exe
+
+      - name: Publish Windows release
+        uses: ncipollo/release-action@v2
+        with:
+          artifacts: dist/main.exe
+          tag: ${{ github.ref_name }}
+          name: Reprate Calculator Windows
+
+  build-macos:
+    name: Build macOS Executable
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build macOS app with PyInstaller
         run: |
           pyinstaller --onefile --windowed --icon=Lumos_Logo_32x32.icns main.py
 
-      - name: Upload build artifacts
+      - name: Create release artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Reprate-Calculator-${{ matrix.os }}
-          path: dist/*
+          name: Reprate_Calculator_macOS
+          path: dist/main
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Publish macOS release
+        uses: ncipollo/release-action@v2
         with:
-          path: ./dist
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ./dist/**/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: dist/main
+          tag: ${{ github.ref_name }}
+          name: Reprate Calculator macOS
