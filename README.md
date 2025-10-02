@@ -1,35 +1,45 @@
 # Reprate Calculator
 
-A desktop application built with Python and Tkinter for calculating oscillator cavity frequencies, repetition rates, and fiber cavity lengths.  
-Designed for laser physics applications with fiber + free-space cavities.
+Reprate Calculator is a lightweight desktop application for calculating repetition rate related parameters in laser systems.  
+It is built with Python and packaged into standalone executables for **Windows** and **macOS**.
+
+---
+
+## 📸 Screenshot
+
+![App Screenshot](https://github.com/Alptknt/Reprate_Calculator/blob/main/Screenshot.png?raw=true)
+
+---
 
 ## ✨ Features
-- Input fiber segment lengths and free-space distances
-- Automatic calculation of:
-  - Individual fiber delays
-  - Total cavity time
-  - Oscillator frequency (MHz)
-  - Repetition rate multiples (2x, 4x, 8x, 16x) with required fiber lengths
-- Adjustable constants for speed of light in glass and air
-- Interactive UI with tooltips
-- Includes schematic diagram and company branding
-- Cross-platform: works on **Windows** and **macOS**
 
-## 📸 Screenshots
-*(Add screenshots of your UI here, e.g. `./images/screenshot.png`)*
+- Cross-platform (Windows `.exe` and macOS `.app`)
+- Simple UI with preloaded diagrams
+- Bundled with project-specific logos and resources
+- Packaged as a single executable file (no Python required)
 
-## 🚀 Installation
+---
+
+## 🛠️ Installation
 
 ### Windows
-Download the latest `.exe` from the [Releases](../../releases) page and run directly.
+1. Download the latest `.exe` from the [Releases](https://github.com/Alptknt/Reprate_Calculator/releases) page.
+2. Run the application directly — no installation needed.
 
 ### macOS
-Download the latest `.dmg` or `.app` bundle from the [Releases](../../releases).
+1. Download the latest `.app` or zipped bundle from the [Releases](https://github.com/Alptknt/Reprate_Calculator/releases).
+2. If macOS shows a security warning:
+   - Right click → **Open** the first time.
+   - Approve in **System Preferences → Security & Privacy**.
 
-Or run from source:
+---
+
+## 🚀 Development
+
+Clone the repository and run locally:
 
 ```bash
 git clone https://github.com/Alptknt/Reprate_Calculator.git
-cd yourrepo
+cd Reprate_Calculator
 pip install -r requirements.txt
 python main.py
