@@ -1,68 +1,64 @@
-name: Build and Release App
+name: Build and Release
 
 on:
   push:
     tags:
-      - 'v*'   # Trigger only on version tags like v1.0, v1.0.1, etc.
+      - "v*"   # Runs only when you push a tag like v1.0.0
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build Windows EXE
+      # Windows build
+      - name: Build Windows executable
+        if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --onefile --noconsole ^
-            --add-data "Lumos_Laser_Logo_1024x236.png;." ^
-            --add-data "Lumos_Logo_32x32.png;." ^
-            --add-data "Osc_Diagram.png;." ^
-            main.py
+          pyinstaller --onefile --windowed --icon=Lumos_Logo_32x32.ico main.py
+        shell: cmd
 
-      - name: Upload Windows EXE to Release
-        uses: softprops/action-gh-release@v1
+      # macOS build
+      - name: Build macOS app
+        if: matrix.os == 'macos-latest'
+        run: |
+          pyinstaller --onefile --windowed --icon=Lumos_Logo_32x32.icns main.py
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: dist/*.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Reprate-Calculator-${{ matrix.os }}
+          path: dist/*
 
-  build-macos:
-    runs-on: macos-latest
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          python-version: '3.11'
+          path: ./dist
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pyinstaller
-
-      - name: Build macOS App
-        run: |
-          pyinstaller --onefile --noconsole \
-            --add-data "Lumos_Laser_Logo_1024x236.png:." \
-            --add-data "Lumos_Logo_32x32.png:." \
-            --add-data "Osc_Diagram.png:." \
-            --icon Lumos_Logo_32x32.icns \
-            main.py
-
-      - name: Upload macOS App to Release
-        uses: softprops/action-gh-release@v1
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: ./dist/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
