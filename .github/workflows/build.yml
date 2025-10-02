@@ -36,7 +36,7 @@ jobs:
           path: dist/main.exe
 
       - name: Publish Windows release
-        uses: ncipollo/release-action@v2
+        uses: ncipollo/release-action@v1
         with:
           artifacts: dist/main.exe
           tag: ${{ github.ref_name }}
@@ -71,7 +71,7 @@ jobs:
           path: dist/main
 
       - name: Publish macOS release
-        uses: ncipollo/release-action@v2
+        uses: ncipollo/release-action@v1
         with:
           artifacts: dist/main
           tag: ${{ github.ref_name }}
