@@ -77,7 +77,7 @@ jobs:
       # 6. Upload artifacts
       # ----------------------------
       - name: Upload Executable
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Reprate_Calculator-${{ matrix.os }}
           path: dist/
