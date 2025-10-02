@@ -66,8 +66,10 @@ jobs:
       - name: Build with PyInstaller (Windows)
         if: runner.os == 'Windows'
         run: |
-          pyinstaller main.py --onefile --windowed --icon=Lumos_Logo_32x32.ico `
+          pyinstaller main.py --onefile --windowed --name Reprate_Calculator `         
             --icon=Lumos_Logo_32x32.ico `
+            --version-file=version.txt `
+            --clean `
             --add-data "assets/Lumos_Logo_32x32.png;assets" `
             --add-data "assets/Lumos_Laser_Logo_1024x236.png;assets" `
             --add-data "assets/Osc_Diagram.png;assets" `
@@ -80,7 +82,9 @@ jobs:
           pyinstaller main.py \
             --onefile \
             --windowed \
+            --name Reprate_Calculator \
             --icon=Lumos_Logo_32x32.icns \
+            --clean \
             --add-data "assets/Lumos_Logo_32x32.png:assets" \
             --add-data "assets/Lumos_Laser_Logo_1024x236.png:assets" \
             --add-data "assets/Osc_Diagram.png:assets" \
