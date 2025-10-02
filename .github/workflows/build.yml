@@ -1,4 +1,8 @@
-name: Build Reprate_Calculator
+name: Build and Release Reprate_Calculator
+
+# Explicitly grant permissions for release creation
+permissions:
+  contents: write
 
 on:
   push:
@@ -8,7 +12,6 @@ on:
 
 jobs:
   build:
-    name: Build for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -41,7 +44,7 @@ jobs:
           pip install pyinstaller pillow
 
       # ----------------------------
-      # 4. Prepare assets folder
+      # 4. Prepare assets
       # ----------------------------
       - name: Prepare assets (Windows)
         if: runner.os == 'Windows'
@@ -60,13 +63,15 @@ jobs:
       # ----------------------------
       # 5. Build executable/app
       # ----------------------------
-
-      
-      
       - name: Build with PyInstaller (Windows)
         if: runner.os == 'Windows'
         run: |
-          pyinstaller main.py --onefile --windowed --name Reprate_Calculator --icon=Lumos_Logo_32x32.ico --version-file=version.txt --clean `
+          pyinstaller main.py `
+            --onefile `
+            --windowed `
+            --name Reprate_Calculator `
+            --icon=Lumos_Logo_32x32.ico `
+            --clean `
             --add-data "assets/Lumos_Logo_32x32.png;assets" `
             --add-data "assets/Lumos_Laser_Logo_1024x236.png;assets" `
             --add-data "assets/Osc_Diagram.png;assets" `
@@ -89,44 +94,27 @@ jobs:
         shell: bash
 
       # ----------------------------
-      # 6. Upload artifacts
+      # 6. Create GitHub release
       # ----------------------------
-      - name: Upload built app/executable
-        uses: actions/upload-artifact@v4
-        with:
-          name: Reprate_Calculator-${{ matrix.os }}
-          path: |
-            dist/*
-
-      # ----------------------------
-      # 7. Create GitHub release (if not exists) and upload assets
-      # ----------------------------
-
-      - name: Create Release 
+      - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0      # Or use ${{ github.sha }} for unique tag per commit
-          release_name: Reprate_Calculator v1.0.0
-          draft: false
-          prerelease: false
+          tag_name: v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release Asset (Windows)
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-release-asset@v1
+      # ----------------------------
+      # 7. Upload release assets
+      # ----------------------------
+      - name: Upload Windows Release Asset
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/Reprate_Calculator.exe
-          asset_name: Reprate_Calculator_Windows.exe
-          asset_content_type: application/octet-stream
+          files: dist/Reprate_Calculator.exe
 
-      - name: Upload Release Asset (macOS)
-        if: matrix.os == 'macos-latest'
-        uses: actions/upload-release-asset@v1
+      - name: Upload macOS Release Asset
+        if: runner.os == 'macOS'
+        uses: softprops/action-gh-release@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/Reprate_Calculator
-          asset_name: Reprate_Calculator_macOS.zip
-          asset_content_type: application/zip
+          files: dist/Reprate_Calculator
