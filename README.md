@@ -29,7 +29,7 @@ Download the latest `.dmg` or `.app` bundle from the [Releases](../../releases).
 Or run from source:
 
 ```bash
-git clone https://github.com/yourusername/yourrepo.git
+git clone https://github.com/Alptknt/Reprate_Calculator.git
 cd yourrepo
 pip install -r requirements.txt
 python main.py
