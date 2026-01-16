@@ -128,8 +128,15 @@ h1 {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Inputs & Forms */
@@ -164,18 +171,39 @@ h3 {
     flex: 1;
 }
 
-input[type="number"], input[type="text"] {
+input[type="number"],
+input[type="text"] {
     width: 100%;
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
     padding: 0.6rem;
+    padding-right: 2.5rem;
+    /* Space for unit */
     border-radius: 6px;
     font-family: var(--font-main);
     font-size: 1rem;
 }
 
-input[type="number"]:focus, input[type="text"]:focus {
+.input-wrapper {
+    position: relative;
+    flex: 2;
+    /* Make inputs wider */
+}
+
+/* Output wrapper ensures proper alignment and width */
+.output-wrapper {
+    position: relative;
+    width: 140px;
+}
+
+.output-field {
+    text-align: right;
+    width: 100% !important;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
     outline: none;
     border-color: var(--accent-color);
 }
@@ -197,11 +225,6 @@ input[readonly] {
     pointer-events: none;
 }
 
-.output-field {
-    width: 100px;
-    text-align: right;
-}
-
 /* Highlights */
 .highlight-box {
     background-color: rgba(56, 189, 248, 0.1);
@@ -220,7 +243,7 @@ input[readonly] {
 
 .result-wrapper {
     position: relative;
-    width: 150px;
+    width: 200px;
 }
 
 .separator {
@@ -275,6 +298,49 @@ input[readonly] {
     margin-bottom: 0.5rem;
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* Reference Box */
+.reference-box {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.reference-box h4 {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.scroll-table {
+    overflow-x: auto;
+}
+
+.reference-box table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.reference-box th,
+.reference-box td {
+    text-align: left;
+    padding: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.reference-box th {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.reference-box td {
+    border-top: 1px solid rgba(51, 65, 85, 0.5);
 }
 
 .diagram-container {
