@@ -1,7 +1,7 @@
-# Reprate Calculator
+# Reprate Calculator v2.0
 
-Reprate Calculator is a lightweight desktop application for calculating repetition rate related parameters in laser systems.  
-It is built with Python and packaged into standalone executables for **Windows** and **macOS**.
+A modern, lightweight **Web Application** for calculating repetition rate related parameters in laser systems.  
+Originally a desktop app, v2.0 has been re-engineered as a zero-install web tool that runs instantly in any browser.
 
 ---
 
@@ -13,32 +13,28 @@ It is built with Python and packaged into standalone executables for **Windows**
 
 ## ✨ Features
 
-- Cross-platform (Windows `.exe` and macOS `.app`)
-- Simple UI with preloaded diagrams
-- Packaged as a single executable file (no Python required)
+- **Zero Install**: Runs directly in your browser.
+- **Cross-Platform**: Works on Windows, macOS, Linux, iOS, and Android.
+- **Secure**: No executable files, no security warnings.
+- **Lightweight**: < 1MB total size.
 
 ---
 
-## 🛠️ Installation
+## 🚀 How to Use
 
-### Windows
-1. Download the latest `.exe` from the [Releases](https://github.com/Alptknt/Reprate_Calculator/releases) page.
-2. Run the application directly — no installation needed.
+### Option 1: Run Locally
+1. Download the `Reprate_Calculator_WebApp.zip` from the [Releases](https://github.com/Alptknt/Reprate_Calculator/releases) page.
+2. Extract the zip file.
+3. Specific `index.html` to launch the calculator.
 
-### macOS
-1. Download the latest `.app` or zipped bundle from the [Releases](https://github.com/Alptknt/Reprate_Calculator/releases).
-2. If macOS shows a security warning:
-   - Right click → **Open** the first time.
-   - Approve in **System Preferences → Security & Privacy**.
-
----
-
-## 🚀 Development
-
-Clone the repository and run locally:
+### Option 2: Development
+Clone the repository and modify the files:
 
 ```bash
 git clone https://github.com/Alptknt/Reprate_Calculator.git
 cd Reprate_Calculator
-pip install -r requirements.txt
-python main.py
+# Open index.html in your browser
+```
+
+## 📜 Legacy Version
+The original Python/Tkinter desktop application source code is archived in the `legacy/` directory for reference.
