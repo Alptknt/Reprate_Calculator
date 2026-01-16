@@ -17,7 +17,7 @@ jobs:
 
       - name: Archive Web App
         run: |
-          zip -r Reprate_Calculator_WebApp.zip index.html styles.css script.js Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png Osc_Diagram.png
+          zip -r Reprate_Calculator_WebApp.zip index.html styles.css script.js Lumos_Logo_32x32.png Lumos_Logo_32x32.ico Lumos_Laser_Logo_1024x236.png osc_diag01.svg
 
       - name: Release
         uses: softprops/action-gh-release@v2
