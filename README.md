@@ -1,4 +1,4 @@
-# Oscillator-Reprate Calculator v2.0
+# Oscillator-Reprate Calculator v2.2
 
 ![Oscillator Diagram](Osc_Diagram.png)
 *(Click to view interactive diagram in the web app)*

@@ -1,6 +1,6 @@
 :root {
-    --bg-color: #0f172a;
-    --panel-bg: #1e293b;
+    --bg-color: hsl(222, 47%, 11%);
+    --panel-bg: #1d283a;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --accent-color: #38bdf8;
@@ -344,18 +344,20 @@ input[readonly] {
 }
 
 .diagram-container {
-    background-color: #fff;
+    background-color: var(--input-bg);
     border-radius: 8px;
     padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
 }
 
 .diagram-container img {
     max-width: 100%;
     height: auto;
+    border-radius: 8px;
 }
 
 /* Multiplier Table */
