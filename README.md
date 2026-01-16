@@ -1,6 +1,6 @@
 # Oscillator-Reprate Calculator v2.2
 
-![Oscillator Diagram](Osc_Diagram.png)
+![Oscillator Diagram](Screenshot.png)
 *(Click to view interactive diagram in the web app)*
 
 ## 🚀 Overview
