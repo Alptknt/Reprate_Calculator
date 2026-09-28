@@ -45,7 +45,7 @@ This project is now a **Web Application**. You do not need to install Python or 
 2.  Open `index.html` in your browser.
 
 ### Releases
-Download the latest version from the [Releases Page](../../releases).
+Download the latest version from the [Releases Page](../../releases). Or use it from [this](https://alptknt.github.io/Reprate_Calculator/) link directly. 
 *   **v2.0**: The complete Web Application overhaul (HTML/CSS/JS).
 
 ![UI Screenshot](Screenshot.png)
